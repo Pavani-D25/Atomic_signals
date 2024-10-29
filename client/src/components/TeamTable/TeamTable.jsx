@@ -1,345 +1,532 @@
+
+
+
 import React, { useState } from "react";
+import { Box, Divider } from "@mui/material";
 import {
-  Box,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
+  Paper,
+  TablePagination,
   Avatar,
-  Stack,
+  Typography,
+  Switch,
   Button,
   IconButton,
+  Tooltip,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import SpeedMeter from "../SpeedMeter/SpeedMeter";
-import ToggleSwitch from "../switch/Switch";
 import Pencil from "../../../public/images/pencil";
+import { TeamTableStyle } from "./TeamTableStyle";
+import GaugeChart from "react-gauge-chart";
+import { styled } from "@mui/material/styles";
+import profile from "../../assets/profile.jpg";
 import EditMembersModal from "../EditMembersModal/EditMembersModal";
-const TeamTable = () => {
-  const [editMemberModalOpen, seteditMemberModalOpen] = useState(false);
 
-  const initialTeamMembers = [
-    {
-      id: 1,
-      name: "George Fernandes",
-      designation: "Visual Designer",
-      department: "Design",
-      signals: ["C", "E", "T", "D", "U"],
-      performance: 3,
-      role: "Developer",
-      experience: "3 yrs 4 months",
-      reportsTo: "Manager Name",
-      email: "george@example.com",
-      status: "active",
-    },
-    {
-      id: 2,
-      name: "Sara Adams",
-      designation: "UI Developer",
-      department: "Engineering",
-      signals: ["A", "B", "F", "G"],
-      performance: 4,
-      role: "Developer",
-      experience: "3 yrs 4 months",
-      email: "sara@example.com",
-      status: "inactive",
-    },
-    {
-      id: 3,
-      name: "Michael Johnson",
-      designation: "Product Manager",
-      department: "Product",
-      signals: ["P", "L", "K", "M"],
-      performance: 5,
-      experience: "3 yrs 4 months",
-      reportsTo: "Manager C",
-      role: "Designer",
-      email: "michael@example.com",
-      status: "active",
-    },
-  ];
 
-  const [teamMembers, setTeamMembers] = useState(initialTeamMembers);
+function TeamTable() {
+    const [editMemberModalOpen, seteditMemberModalOpen] = useState(false);
 
+  const handleSwitchChange = (event, row) => {
+    console.log(`Switch for ${row.name} changed to ${event.target.checked}`);
+  };
+  const IOSSwitch = styled((props) => (
+    <Switch
+      focusVisibleClassName=".Mui-focusVisible"
+      disableRipple
+      {...props}
+    />
+  ))(({ theme }) => ({
+    width: 40,
+    height: 22,
+    padding: 0,
+    "& .MuiSwitch-switchBase": {
+      padding: 0,
+      margin: 0,
+      transitionDuration: "300ms",
+      "&.Mui-checked": {
+        transform: "translateX(17px)",
+        color: "#fff",
+        "& + .MuiSwitch-track": {
+          backgroundColor: "#49C792",
+          opacity: 1,
+          border: 0,
+          ...theme.applyStyles("dark", {
+            backgroundColor: "#2ECA45",
+          }),
+        },
+        "&.Mui-disabled + .MuiSwitch-track": {
+          opacity: 0.5,
+        },
+      },
+      "&.Mui-focusVisible .MuiSwitch-thumb": {
+        color: "#33cf4d",
+        border: "6px solid #fff", // Focus effect
+      },
+      "&.Mui-disabled .MuiSwitch-thumb": {
+        color: theme.palette.grey[100],
+        ...theme.applyStyles("dark", {
+          color: theme.palette.grey[600],
+        }),
+      },
+      "&.Mui-disabled + .MuiSwitch-track": {
+        opacity: 0.7,
+        ...theme.applyStyles("dark", {
+          opacity: 0.3,
+        }),
+      },
+    },
+    "& .MuiSwitch-thumb": {
+      boxSizing: "border-box",
+      width: 18,
+      height: 18,
+      top: "50%",
+      marginTop: "2px",
+      transition: "transform 300ms",
+      transform: "translateX(3px)",
+    },
+    "& .MuiSwitch-track": {
+      borderRadius: 22 / 2,
+      backgroundColor: "#808080",
+      opacity: 1,
+      transition: theme.transitions.create(["background-color"], {
+        duration: 500,
+      }),
+      ...theme.applyStyles("dark", {
+        backgroundColor: "#39393D",
+      }),
+    },
+  }));
+
+  
   const handleEditMemberClick = (member) => {
     console.log("Edit clicked for", member);
   };
 
-  const handleToggleStatus = (id) => {
-    setTeamMembers((prevMembers) =>
-      prevMembers.map((member) =>
-        member.id === id
-          ? {
-              ...member,
-              status: member.status === "active" ? "inactive" : "active",
-            }
-          : member
-      )
-    );
+  const rows = [
+    {
+      id: 1,
+      name: "Alice",
+      Designation: "Senior Engineer",
+      Department: "Engineering",
+      Signals: ["C", "E", "T", "D", "U"],
+      OverallPerformance: 70,
+      Reporting: [
+        { name: "Mary", img: profile },
+        { name: "Steve", img: profile },
+        { name: "joe", img: profile },
+        { name: "Nive", img: profile },
+      ],
+      Role: "Employee",
+      Email: "aravinth@gmail.com",
+      Experience: "3Y 4months",
+      Status: "Active",
+      image: profile,
+    },
+    {
+      id: 2,
+      name: "Bob",
+      Designation: "Designer",
+      Department: "Design",
+      Signals: ["C", "E", "T", "D", "U"],
+      OverallPerformance: 85,
+      Reporting: [{ name: "Mary", img: profile }],
+      Role: "Employee",
+      Email: "bob@example.com",
+      Experience: "2Y 6months",
+      Status: "Active",
+      image: profile,
+    },
+    {
+      id: 3,
+      name: "Charlie",
+      Designation: "Teacher",
+      Department: "Education",
+      Signals: ["C", "E", "T", "D", "U"],
+      OverallPerformance: 92,
+      Reporting: [
+        { name: "Mary", img: profile },
+        { name: "Steve", img: profile },
+        { name: "joe", img: profile },
+        { name: "Nive", img: profile },
+      ],
+      Role: "Employee",
+      Email: "charlie@example.com",
+      Experience: "5Y 1month",
+      Status: "Inactive",
+      image: profile,
+    },
+    {
+      id: 4,
+      name: "Diana",
+      Designation: "Project Manager",
+      Department: "Management",
+      Signals: ["C", "E", "T", "D", "U"],
+      OverallPerformance: 78,
+      Reporting: [{ name: "Mary", img: profile }],
+      Role: "Manager",
+      Email: "diana@example.com",
+      Experience: "4Y 5months",
+      Status: "Active",
+      image: profile,
+    },
+    {
+      id: 5,
+      name: "Ethan",
+      Designation: "Software Developer",
+      Department: "IT",
+      Signals: ["C", "E", "T", "D", "U"],
+      OverallPerformance: 88,
+      Reporting: [
+        { name: "Mary", img: profile },
+        { name: "Steve", img: profile },
+        { name: "joe", img: profile },
+        { name: "Nive", img: profile },
+      ],
+      Role: "Employee",
+      Email: "ethan@example.com",
+      Experience: "1Y 8months",
+      Status: "Active",
+      image: profile,
+    },
+    {
+      id: 6,
+      name: "Fiona",
+      Designation: "HR Specialist",
+      Department: "Human Resources",
+      Signals: ["C", "E", "T", "D", "U"],
+      OverallPerformance: 75,
+      Reporting: [
+        { name: "Mary", img: profile },
+        { name: "Steve", img: profile },
+      ],
+      Role: "Employee",
+      Email: "fiona@example.com",
+      Experience: "3Y 2months",
+      Status: "Active",
+      image: profile,
+      reporterImg: profile,
+    },
+    {
+      id: 7,
+      name: "George",
+      Designation: "Data Analyst",
+      Department: "Data Science",
+      Signals: ["C", "E", "T", "D", "U"],
+      OverallPerformance: 90,
+      Reporting: [
+        { name: "Mary", img: profile },
+        { name: "Steve", img: profile },
+      ],
+      Role: "Employee",
+      Email: "george@example.com",
+      Experience: "2Y 4months",
+      Status: "Active",
+      image: profile,
+    },
+    {
+      id: 8,
+      name: "Hannah",
+      Designation: "Quality Assurance",
+      Department: "IT",
+      Signals: ["C", "E", "T", "D", "U"],
+      OverallPerformance: 80,
+      Reporting: [
+        { name: "Mary", img: profile },
+        { name: "Steve", img: profile },
+      ],
+      Role: "Employee",
+      Email: "hannah@example.com",
+      Experience: "3Y 9months",
+      Status: "Active",
+      image: profile,
+    },
+    {
+      id: 9,
+      name: "Ian",
+      Designation: "Marketing Specialist",
+      Department: "Marketing",
+      Signals: ["C", "E", "T", "D", "U"],
+      OverallPerformance: 77,
+      Reporting: [
+        { name: "Mary", img: profile },
+        { name: "Steve", img: profile },
+      ],
+      Role: "Employee",
+      Email: "ian@example.com",
+      Experience: "1Y 11months",
+      Status: "Active",
+      image: profile,
+    },
+    {
+      id: 10,
+      name: "Julia",
+      Designation: "Graphic Designer",
+      Department: "Design",
+      Signals: ["C", "E", "T", "D", "U"],
+      OverallPerformance: 82,
+      Reporting: [
+        { name: "Mary", img: profile },
+        { name: "Steve", img: profile },
+      ],
+
+      Role: "Employee",
+      Email: "julia@example.com",
+      Experience: "2Y 3months",
+      Status: "Active",
+      image: profile,
+      reporterImg: profile,
+    },
+  ];
+  console.log(rows);
+  // Pagination state
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
   };
 
-  const generateColor = (index) => {
-    const colors = [
-      "#3f51b5",
-      "#f50057",
-      "#4caf50",
-      "#ff9800",
-      "#2196f3",
-      "#9c27b0",
-      "#ffeb3b",
-      "#ff5722",
-      "#795548",
-      "#607d8b",
-    ];
-    return colors[index % colors.length];
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+  const getStatusLabel = (event) => {
+    return event.target.checked ? "Active" : "Inactive";
   };
 
-  const renderAvatar = (src, name) => (
-    <Avatar
-      sx={{ width: "2.5rem", height: "2.5rem" }}
-      alt={name}
-      src={src || "fallback_image_url_here"}
-    />
+  const displayedRows = rows.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
   );
-
+  const getSignalColor = (signal) => {
+    switch (signal) {
+      case "C":
+        return "#4CAF50";
+      case "E":
+      case "T":
+        return "#FFC107";
+      case "D":
+        return "#4CAF50";
+      case "U":
+        return "#F44336";
+      default:
+        return "#757575";
+    }
+  };
   return (
-    <Box
-      p={1}
-      marginRight={1}
-      marginLeft={2}
-      display="flex"
-      position="relative"
-      sx={{
-        pr: 0,
-        backgroundColor: "#fff",
-        height: "595px",
-        borderRadius: "10px",
-      }}
-    >
-      <TableContainer
-        sx={{
-          maxHeight: "60vh",
-          overflowX: "auto",
-          flexGrow: 1,
-          msScrollbarWidth: "none",
-          scrollbarWidth: "none",
-        }}
-      >
-        <Table
-          sx={{
-            minWidth: 1400,
-            msScrollbarWidth: "none",
-            scrollbarWidth: "none",
-            fontFamily: "Poppins",
-          }}
-          aria-label="team members table"
-        >
-          <TableHead>
+    <Paper sx={TeamTableStyle.paper}>
+      <TableContainer sx={TeamTableStyle.tableContainer}>
+        <Box sx={TeamTableStyle.liner} />
+        <Table sx={TeamTableStyle.tabler}>
+          <TableHead sx={TeamTableStyle.header}>
             <TableRow>
-              {[
-                "Name",
-                "Designation",
-                "Department",
-                "Signals",
-                "Overall Performance",
-                "Reports To",
-                "Role",
-                "Email",
-                "Experience",
-                "Status",
-              ].map((header) => (
+              <TableCell sx={TeamTableStyle.tableName} padding="none">
+                Name
+              </TableCell>
+              <TableCell sx={TeamTableStyle.tableDesig} padding="none">
+                Designation
+              </TableCell>
+              <TableCell sx={TeamTableStyle.tableDep} padding="none">
+                Department
+              </TableCell>
+              <TableCell sx={TeamTableStyle.tablesignal} padding="none">
+                Signals
+              </TableCell>
+              <TableCell sx={TeamTableStyle.tableOP} padding="none">
+                Overall Performance
+              </TableCell>
+              <TableCell sx={TeamTableStyle.tableReportto} padding="none">
+                Reporting to
+              </TableCell>
+              <TableCell sx={TeamTableStyle.tableEm} padding="none">
+                Role
+              </TableCell>
+              <TableCell sx={TeamTableStyle.tableEm} padding="none">
+                Email
+              </TableCell>
+              <TableCell sx={TeamTableStyle.tableExp} padding="none">
+                Experience
+              </TableCell>
+              <TableCell sx={TeamTableStyle.tableStatus} padding="none">
+                Status
+              </TableCell>
+
+              <Box sx={TeamTableStyle.fixedColumnBoxs}>
                 <TableCell
-                  key={header}
-                  sx={{
-                    whiteSpace: "nowrap",
-                    textOverflow: "ellipsis",
-                    overflow: "hidden",
-                    fontFamily: "Poppins",
-                    minWidth: 120,
-                  }}
-                >
-                  {header}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {teamMembers.map((member) => (
-              <TableRow
-                key={member.id}
-                sx={{
-                  backgroundColor:
-                    member.status === "inactive"
-                      ? "transparent"
-                      : "transparent",
-                }}
-              >
-                <TableCell sx={{ whiteSpace: "nowrap", overflow: "hidden" }}>
-                  <Stack direction="row" spacing={1} alignItems="center">
-                    {renderAvatar(
-                      "https://images.unsplash.com/photo-1581403341630-a6e0b9d2d257?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                      member.name
-                    )}
-                    <Typography noWrap sx={{ fontFamily: "Poppins" }}>
-                      {member.name}
-                    </Typography>
-                  </Stack>
-                </TableCell>
-                <TableCell sx={{ fontFamily: "Poppins", minWidth: 120 }}>
-                  {member.designation}
-                </TableCell>
-                <TableCell sx={{ fontFamily: "Poppins", minWidth: 120 }}>
-                  {member.department}
-                </TableCell>
-
-                <TableCell sx={{ fontFamily: "Poppins", minWidth: 120 }}>
-                  <Stack direction="row" spacing={1}>
-                    {member.signals.map((signal, index) => (
-                      <Avatar
-                        key={index}
-                        sx={{
-                          bgcolor: generateColor(index),
-                          width: 24,
-                          height: 24,
-                          fontSize: "0.7rem",
-                        }}
-                      >
-                        <Typography variant="caption" color="white">
-                          {signal}
-                        </Typography>
-                      </Avatar>
-                    ))}
-                  </Stack>
-                </TableCell>
-
-                <TableCell
-                  sx={{
-                    fontFamily: "Poppins",
-                    pl: "5%",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <SpeedMeter value={member.performance * 20} />
-                </TableCell>
-
-                <TableCell sx={{ fontFamily: "Poppins", minWidth: 110 }}>
-                  <Stack direction="row" spacing={1} alignItems="center">
-                    {renderAvatar(
-                      "https://images.unsplash.com/photo-1581403341630-a6e0b9d2d257?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                      member.name
-                    )}
-                    <Typography noWrap sx={{ fontFamily: "Poppins" }}>
-                      {member.name}
-                    </Typography>
-                  </Stack>
-                </TableCell>
-                <TableCell sx={{ fontFamily: "Poppins", minWidth: 110 }}>
-                  {member.role}
-                </TableCell>
-                <TableCell sx={{ fontFamily: "Poppins", minWidth: 110 }}>
-                  {member.email}
-                </TableCell>
-                <TableCell sx={{ fontFamily: "Poppins", minWidth: 110 }}>
-                  {member.experience}
-                </TableCell>
-                <TableCell sx={{ fontFamily: "Poppins", minWidth: 110 }}>
-                  <ToggleSwitch
-                    checked={member.status === "active"}
-                    onChange={() => handleToggleStatus(member.id)}
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      <Box
-        sx={{
-          width: 200,
-          position: "sticky",
-          justifyContent: "end",
-          display: "flex",
-          backgroundColor: "transparent",
-          overflowX: "hidden",
-        }}
-      >
-        <TableContainer
-          sx={{
-            maxHeight: "150%",
-            backgroundColor: "transparent",
-            width: "100%",
-          }}
-        >
-          <Table
-            aria-label="actions table"
-            sx={{ backgroundColor: "transparent", tableLayout: "fixed" }}
-          >
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  align="center"
-                  sx={{ fontFamily: "Poppins", borderLeft: "1px solid #ccc" }}
+                  sx={{ ...TeamTableStyle.fixedColumn, minWidth: "200px" }}
                 >
                   Actions
                 </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {teamMembers.map((member) => (
-                <TableRow key={member.id}>
-                  <TableCell
-                    align="end"
-                    sx={{ height: "45.6px", borderLeft: "1px solid #ccc" }}
-                  >
-                    <Stack
-                      direction="row"
-                      spacing={0}
-                      sx={{ justifyContent: "end" }}
-                    >
-                      <Button
-                        variant="contained"
+              </Box>
+            </TableRow>
+          </TableHead>
+          <TableBody sx={TeamTableStyle.tableBody}>
+            {displayedRows.map((row) => (
+              <TableRow key={row.id} sx={TeamTableStyle.tableRow}>
+                <TableCell sx={TeamTableStyle.tableNames}>
+                  {" "}
+                  <Box sx={TeamTableStyle.namein}>
+                    <Avatar
+                      src={row.image || ""}
+                      alt={row.name}
+                      sx={TeamTableStyle.nameavat}
+                    />
+                    <Typography variant="body1" sx={TeamTableStyle.typoname}>
+                      {row.name}
+                    </Typography>
+                  </Box>
+                </TableCell>
+                <TableCell sx={TeamTableStyle.tableDesigs} padding="none">
+                  {row.Designation}
+                </TableCell>
+                <TableCell sx={TeamTableStyle.tableDeps} padding="none">
+                  {row.Department}
+                </TableCell>
+                <TableCell sx={TeamTableStyle.tablesignals} padding="none">
+                  <Box sx={TeamTableStyle.tablesigns}>
+                    {row.Signals.map((signal, index) => (
+                      <Box
+                        key={index}
                         sx={{
-                          textTransform: "none",
-                          fontFamily: "Poppins",
-                          backgroundColor: "#49c792",
-                          width: "107px",
-                          boxShadow: "none",
-                          fontSize: "11px",
-                          height: "30px",
-                          mt: "7px",
-                          fontWeight: "300",
-                          whiteSpace: "nowrap", // Ensure text stays on a single line
+                          ...TeamTableStyle.signalsconte,
+                          backgroundColor: getSignalColor(signal),
                         }}
                       >
-                        Add feedback
-                      </Button>
-
+                        {signal}
+                      </Box>
+                    ))}
+                  </Box>
+                </TableCell>
+                <TableCell sx={TeamTableStyle.tableOPs} padding="none">
+                  <GaugeChart
+                    id={`gauge-chart-${row.id}`}
+                    nrOfLevels={6}
+                    percent={row.OverallPerformance / 100}
+                    arcPadding={0}
+                    cornerRadius={0}
+                    textColor={"#000000"}
+                    needleColor={"#000000"}
+                    colors={["#FF0000", "#FFA500", "#008000"]}
+                    style={TeamTableStyle.graph}
+                    hideText={true}
+                  />
+                </TableCell>
+                <TableCell sx={TeamTableStyle.tableEmss}>
+                  <Typography variant="body2" style={TeamTableStyle.tablebot}>
+                    <Avatar
+                      alt={row.Reporting[0].name}
+                      src={row.Reporting[0].img}
+                      sx={{ width: 40, height: 40, marginRight: 1 }}
+                    />
+                    {row.Reporting[0].name}
+                    {row.Reporting.length > 1 && (
+                      <Tooltip
+                        title={
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              gap: "7px",
+                            }}
+                          >
+                            {row.Reporting.slice(1).map((reporter, index) => (
+                              <Box
+                                key={index}
+                                display="flex"
+                                alignItems="center"
+                              >
+                                <Avatar
+                                  alt={reporter.name}
+                                  src={reporter.img}
+                                  sx={TeamTableStyle.reporterisimg}
+                                />
+                                <Typography variant="body2">
+                                  {reporter.name}
+                                </Typography>
+                              </Box>
+                            ))}
+                          </Box>
+                        }
+                        placement="bottom"
+                        arrow
+                        componentsProps={{
+                          tooltip: { sx: TeamTableStyle.tooltip },
+                          arrow: { sx: TeamTableStyle.arrow },
+                        }}
+                      >
+                        <span style={TeamTableStyle.moreplace}>
+                          +{row.Reporting.length - 1} More
+                        </span>
+                      </Tooltip>
+                    )}
+                  </Typography>
+                </TableCell>
+                <TableCell sx={TeamTableStyle.tableEms} padding="none">
+                  {row.Role}
+                </TableCell>
+                <TableCell sx={TeamTableStyle.tableEms} padding="none">
+                  {row.Email}
+                </TableCell>
+                <TableCell sx={TeamTableStyle.tableExps} padding="none">
+                  {row.Experience}
+                </TableCell>
+                <TableCell sx={TeamTableStyle.tableStatuss} padding="none">
+                  <Box sx={TeamTableStyle.statuscheck}>
+                    <IOSSwitch
+                      defaultChecked={row.Status === "Active"} // Set initial checked state based on row data
+                      onChange={(event) =>
+                        console.log(
+                          `${row.name} is now ${getStatusLabel(event)}`
+                        )
+                      }
+                      color="primary"
+                    />
+                    <Typography variant="body2" sx={{ ml: 1 }}>
+                      {/* Display status based on the switch's initial value */}
+                      {row.Status === "Active" ? "Active" : "Inactive"}
+                    </Typography>
+                  </Box>
+                </TableCell>
+                <Divider orientation="vertical" flexItem />
+                <Box sx={TeamTableStyle.fixedColumnBoxs}>
+                  <TableCell sx={TeamTableStyle.fixedColumns}>
+                    <Box sx={TeamTableStyle.iconsbox}>
+                      <Button sx={TeamTableStyle.addlab}> Add Feedback</Button>
                       <IconButton onClick={() => seteditMemberModalOpen(true)}>
                         <Avatar
                           sx={{ bgcolor: "#eefbf6", width: 30, height: 30 }}
                         >
                           <Pencil sx={{ width: 18, height: 18 }} />
                         </Avatar>
-                      </IconButton>
-                    </Stack>
+                      </IconButton>{" "}
+                    </Box>
                   </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
+                </Box>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={rows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        sx={TeamTableStyle.pagination}
+      />
       <EditMembersModal
         open={editMemberModalOpen}
         toggleDrawer={() => seteditMemberModalOpen(false)}
       />
-    </Box>
+    </Paper>
   );
-};
+}
 
 export default TeamTable;

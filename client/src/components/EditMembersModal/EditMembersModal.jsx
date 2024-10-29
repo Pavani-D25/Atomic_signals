@@ -257,7 +257,7 @@ export default function EditMembersModal({ open, toggleDrawer }) {
                 boxShadow: "none",
               }}
             >
-              Apply Filter
+              Apply 
             </Button>
             <Button
               variant="outlined"
